@@ -1,6 +1,6 @@
 {
   "name": "@safeheron/crypto-bip32",
-  "version": "0.5.0",
+  "version": "1.0.1",
   "description": "HDKey in js(embrace bip32-secp256k1, bip32-ed25519)",
   "keywords": [
     "bip32",
@@ -16,7 +16,6 @@
     "type": "git",
     "url": "git@github.com:safeheron/crypto-bip32-js"
   },
-  "license": "MIT",
   "author": "Max<hejh1500@gmail.com>",
   "files": [
     "dist"
@@ -58,6 +57,6 @@
     ]
   },
   "publishConfig": {
-    "registry": "https://www.npmjs.com/"
+    "registry": "https://registry.npmjs.org/"
   }
 }
