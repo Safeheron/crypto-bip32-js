@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "outDir": "./test-dist",
+    "moduleResolution": "Node",
+    "allowJs": true,
+    "skipLibCheck": true
+  },
+  "include": [
+    "./lib/**/*",
+    "index.ts",
+    "./test",
+  ],
+  "exclude": [
+    "./test/ed25519-hd-key-opt-test.js",
+    "./lib/Ed25519HDKey_opt.js",
+  ]
+}

@@ -1,0 +1,87 @@
+										bip32测试流程
+需求：对于C++，Java， JavaScript三个版本的bip32算法，给定相同的派生路径，它们能派生出相同的子密钥。
+测试方案：对于C++，Java，JavaScript三个版本的bip32库，分别随机各自生成一系列派生路径，并给出该路径对应的扩展密钥（以base58编码），将路径和路径对应的扩展密钥写进文件中，然后发送给其它两种语言版本的bip32库验证。
+
+说明：对于private key derivation，在生成每一级路径索引的同时，随机生成一个32 bits的随机数，若该数的最高比特为为1，则记r为r’，作hardened derivation.（r为子密钥索引）
+
+文件格式：
+priv_derivation.txt(private key derivation)
+1.seed         # seed encoded in hexadecimal
+2.m             # master path
+3.master xprv         # extended master private key encoded in base58
+4master xpub        # extended master public key encoded in base58
+5.m/r1             # r1:  随机生成的子密钥索引(r1 < 2的31次方)。（ 同时生成一个32 bits的随机数，判断该随机数的最高位是否为1，如果是，则记m/r1为m/r1’，表示做hardened derivation（下同））
+6.child xprv         # extended child private key encoded in base58
+7.child xpub        # extended child private key encoded in base58
+…
+一级子节点索引共生成10万个
+…
+m/r1/r2             # r2:  随机生成的子密钥索引(r2< 2的31次方)
+child xprv
+child xpub
+…
+二级子节点索引共生成10万个，每个一级子节点对应一个
+…
+m/r1/r2/r3         # r3:  随机生成的子密钥索引(r3 < 2的31次方)
+child xprv
+child xpub
+…
+三级子节点索引共生成10万个，每个二级子节点对应一个
+…
+m/r1/r2/r3/r4     # r4:  随机生成的子密钥索引(r4 < 2的31次方)
+child xprv
+child xpub
+…
+四级子节点索引共生成10万个，每个三级子节点对应一个
+...
+m/r1/r2/r3/r4/r5  # r5:  随机生成的子密钥索引(r5 < 2的31次方)
+child xprv
+child xpub
+…
+五级子节点索引共生成10万个，每个四级子节点对应一个
+…
+
+
+pub_derivation.txt(for public derivation)
+1.seed           # seed encoded in hexadecimal
+2.M                            # master path
+3.master xpub          # extended master public key encoded in base58
+4.m/r1                        # r1:  随机生成的子密钥索引(r1 < 2的31次方)
+5.child xpub              # extended child private key encoded in base58
+…
+一级子节点索引共生成10万个
+…
+m/r1/r2                      # r2:  随机生成的子密钥索引(r2< 2的31次方)
+child xpub
+…
+二级子节点索引共生成10万个，每个一级子节点对应一个
+…
+m/r1/r2/r3                 # r3:  随机生成的子密钥索引(r3 < 2的31次方)
+child xpub
+…
+三级子节点索引共生成10万个，每个二级子节点对应一个
+…
+m/r1/r2/r3/r4            # r4:  随机生成的子密钥索引(r4 < 2的31次方)
+child xpub
+…
+四级子节点索引共生成10万个，每个三级子节点对应一个
+…
+m/r1/r2/r3/r4/r5       # r5:  随机生成的子密钥索引(r5 < 2的31次方)。
+child xpub
+…
+五级子节点索引共生成10万个，每个四级子节点对应一个
+…
+
+测试时长：
+对于js版本的bip32库，由于生成大量测试数据的时间较长，所以可以将js版本的bip32库部署到服务器上，然后创建一个screen会话，运行测试用例。
+关于js版本的bip32库，生成上述priv_derivation.txt某次统计时长为：1780s
+生成pub_derivation.txt的时为：1783s
+
+
+关于screen：https://www.gnu.org/software/screen/
+http://aperiodic.net/screen/quick_reference
+
+boundary test(边界测试)
+1.测试空路径
+2.测试非法路径
+
