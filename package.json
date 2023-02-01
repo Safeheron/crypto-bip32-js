@@ -22,9 +22,6 @@
   ],
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "browser": {
-    "buffer": false
-  },
   "scripts": {
     "lint": "standardx",
     "build": "rm -fr ./dist && tsc -p tsconfig.json",
