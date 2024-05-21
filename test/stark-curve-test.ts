@@ -1,7 +1,7 @@
 import * as BN from 'bn.js'
 import {STARK} from "..";
 import {Hex} from "@safeheron/crypto-utils";
-import * as assert from "assert";
+import { strict as assert } from 'assert';
 
 describe('Elliptic Curve Encryption', function () {
     it('ConstantTest', async function () {
@@ -12,11 +12,11 @@ describe('Elliptic Curve Encryption', function () {
         const gX = new BN('874739451078007766457464989774322083649278607533249481151382481072868806602')
         const gY = new BN('152666792071518830868575557812948353041420400780739481342941381225525861407')
 
-        assert(STARK.curve.a.fromRed().eq(alpha), 'STARK.curve.a.fromRed().eq(alpha)')
-        assert(STARK.curve.b.fromRed().eq(beta), 'STARK.curve.b.fromRed().eq(beta)')
-        assert(STARK.curve.p.eq(p), 'STARK.p.eq(p)')
-        assert(STARK.g.getX().eq(gX), 'STARK.g.getX().eq(gX)')
-        assert(STARK.g.getY().eq(gY), 'STARK.g.getY().eq(gY)')
+        assert.ok(STARK.curve.a.fromRed().eq(alpha), 'STARK.curve.a.fromRed().eq(alpha)')
+        assert.ok(STARK.curve.b.fromRed().eq(beta), 'STARK.curve.b.fromRed().eq(beta)')
+        assert.ok(STARK.curve.p.eq(p), 'STARK.p.eq(p)')
+        assert.ok(STARK.g.getX().eq(gX), 'STARK.g.getX().eq(gX)')
+        assert.ok(STARK.g.getY().eq(gY), 'STARK.g.getY().eq(gY)')
     });
 
     it('GetPublicKeyFromPrivateKey', async function () {
@@ -44,7 +44,7 @@ describe('Elliptic Curve Encryption', function () {
             let publicKey = STARK.g.mul(privateKey);
             let pubX = publicKey.getX();
             let expectedPubX = new BN(pair.publicKeyXHex, 16)
-            assert(pubX.eq(expectedPubX), "pubX.eq(expectedPubX)")
+            assert.ok(pubX.eq(expectedPubX), "pubX.eq(expectedPubX)")
         }
     });
 
@@ -59,8 +59,8 @@ describe('Elliptic Curve Encryption', function () {
         let p100Prime = p10.mul(ten)
         let p100DoublePrime = p1.mul(ten).mul(ten)
 
-        assert( p100.eq(p100Prime), 'p100.eq(p100Prime)')
-        assert( p100.eq(p100DoublePrime), 'p100.eq(p100DoublePrime)')
+        assert.ok( p100.eq(p100Prime), 'p100.eq(p100Prime)')
+        assert.ok( p100.eq(p100DoublePrime), 'p100.eq(p100DoublePrime)')
     });
 
     it('Mul_2', async function () {
@@ -74,8 +74,8 @@ describe('Elliptic Curve Encryption', function () {
         let p81Prime = p9.mul(nine)
         let p81DoublePrime = p1.mul(nine).mul(nine)
 
-        assert( p81.eq(p81Prime), 'p81.eq(p81Prime)')
-        assert( p81.eq(p81DoublePrime), 'p81.eq(p81DoublePrime)')
+        assert.ok( p81.eq(p81Prime), 'p81.eq(p81Prime)')
+        assert.ok( p81.eq(p81DoublePrime), 'p81.eq(p81DoublePrime)')
     });
 
     it('Add_1', async function () {
@@ -87,7 +87,7 @@ describe('Elliptic Curve Encryption', function () {
         let p9 = STARK.g.mul(nine);
         let p81 = STARK.g.mul(eightOne);
 
-        assert( p1.add(p1).add(p1).add(p1).add(p1).add(p1).add(p1).add(p1).add(p1).eq(p9), 'p1.add(p1).add(p1).add(p1).add(p1).add(p1).add(p1).add(p1).add(p1).eq(p9)')
-        assert( p9.add(p9).add(p9).add(p9).add(p9).add(p9).add(p9).add(p9).add(p9).eq(p81), 'p9.add(p9).add(p9).add(p9).add(p9).add(p9).add(p9).add(p9).add(p9).eq(p81)')
+        assert.ok( p1.add(p1).add(p1).add(p1).add(p1).add(p1).add(p1).add(p1).add(p1).eq(p9), 'p1.add(p1).add(p1).add(p1).add(p1).add(p1).add(p1).add(p1).add(p1).eq(p9)')
+        assert.ok( p9.add(p9).add(p9).add(p9).add(p9).add(p9).add(p9).add(p9).add(p9).eq(p81), 'p9.add(p9).add(p9).add(p9).add(p9).add(p9).add(p9).add(p9).add(p9).eq(p81)')
     });
 })
