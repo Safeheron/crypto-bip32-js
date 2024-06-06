@@ -169,8 +169,8 @@ export class STARKHDKey {
             // ki = parse256(IL) + kpar (mod n)
             try {
                 let _privateKey = this._privateKey.add(IL).umod(STARK.n)
-                // throw if IL >= n || (privateKey + IL) === 0
-                if(IL.gt(STARK.n) || _privateKey.eqn(0)) throw "Invalid child private key!"
+                // throw (privateKey + IL) === 0
+                if(_privateKey.eqn(0)) throw "Invalid child private key!"
                 hd.privateKey = _privateKey
             } catch (err) {
                 // In case parse256(IL) >= n or ki == 0, one should proceed with the next value for i
@@ -182,8 +182,8 @@ export class STARKHDKey {
             //    = G*IL + Kpar
             try {
                 let _publicKey = this._publicKey.add(STARK.g.mul(IL))
-                // throw if IL >= n || (g**IL + publicKey) is infinity
-                if(IL.gt(STARK.n) || _publicKey.isInfinity()) throw "Invalid child public key!"
+                // throw if (g**IL + publicKey) is infinity
+                if(_publicKey.isInfinity()) throw "Invalid child public key!"
                 hd.publicKey = _publicKey
             } catch (err) {
                 // In case parse256(IL) >= n or Ki is the point at infinity, one should proceed with the next value for i
@@ -255,8 +255,8 @@ export class STARKHDKey {
         //    = G*IL + Kpar
         try {
             let _publicKey = this._publicKey.add(STARK.g.mul(IL))
-            // throw if IL >= n || (g**IL + publicKey) is infinity
-            if(IL.gt(STARK.n) || _publicKey.isInfinity()) throw "Invalid child public key!"
+            // throw if (g**IL + publicKey) is infinity
+            if(_publicKey.isInfinity()) throw "Invalid child public key!"
             hd.publicKey = _publicKey
         } catch (err) {
             // In case parse256(IL) >= n or Ki is the point at infinity, one should proceed with the next value for i
@@ -285,7 +285,8 @@ export class STARKHDKey {
         let IL = new BN(I.substr(0, 64), 16)
         let IR = new BN(I.substr(64), 16)
 
-        if ((IL.gt(STARK.n)) || (IL.eqn(0))) {
+        IL = IL.umod(STARK.n)
+        if (IL.eqn(0)) {
             throw "Invalid Master Key!"
         }
 

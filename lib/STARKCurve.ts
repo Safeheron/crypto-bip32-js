@@ -18,8 +18,8 @@ export const STARK = new elliptic.ec(
         hash: hash.sha256,
         gRed: false,
         g:  [
-            "1ef15c18599971b7beced415a40f0c7deacfd9b0d1819e03d723d8bc943cfca",
-            "5668060aa49730b7be4801df46ec62de53ecd11abe43a32873000c36e8dc1f"
+            "01ef15c18599971b7beced415a40f0c7deacfd9b0d1819e03d723d8bc943cfca",
+            "005668060aa49730b7be4801df46ec62de53ecd11abe43a32873000c36e8dc1f"
         ],
     })
 );
