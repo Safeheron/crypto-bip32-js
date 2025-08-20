@@ -1,6 +1,6 @@
 {
   "name": "@safeheron/crypto-bip32",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "HDKey in js(embrace bip32-secp256k1, bip32-ed25519)",
   "keywords": [
     "bip32",
@@ -44,7 +44,7 @@
     "bn.js": "^4.11.9",
     "bs58check": "^2.1.2",
     "crypto-js": "3.3.0",
-    "elliptic": "^6.5.3",
+    "elliptic": "^6.6.1",
     "hash.js": "^1.1.7"
   },
   "standardx": {
