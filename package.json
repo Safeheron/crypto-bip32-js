@@ -42,7 +42,7 @@
     "assert": "^2.0.0",
     "blakejs": "^1.1.0",
     "bn.js": "^4.11.9",
-    "bs58check": "^2.1.2",
+    "bs58check": "^4.0.0",
     "crypto-js": "^4.2.0",
     "elliptic": "^6.6.1",
     "hash.js": "^1.1.7"
