@@ -1,4 +1,4 @@
-import * as bs58check from 'bs58check'
+import  bs58check from 'bs58check'
 import * as BN from 'bn.js'
 import * as cryptoJS from "crypto-js"
 import * as elliptic from 'elliptic'
@@ -323,7 +323,7 @@ export class Secp256k1HDKey {
         let hdkey = new Secp256k1HDKey(versions)
 
         let keyBuffer = bs58check.decode(base58key)
-        let keyBufferHex = keyBuffer.toString('hex')
+        let keyBufferHex = Hex.fromBytes(keyBuffer)
 
         let version = parseInt(keyBufferHex.substr(0, 4 * 2), 16)
         assert(version === versions.private || version === versions.public, 'Version mismatch: does not match private or public')

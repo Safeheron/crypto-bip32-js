@@ -1,5 +1,5 @@
 import * as assert from 'assert'
-import * as bs58check from 'bs58check'
+import  bs58check from 'bs58check'
 import * as BN from 'bn.js'
 import * as elliptic from 'elliptic'
 import * as cryptoJS from "crypto-js"
@@ -354,7 +354,7 @@ export class Ed25519HDKey {
         let hdkey = new Ed25519HDKey(versions)
 
         let keyBuffer = bs58check.decode(base58key)
-        let keyBufferHex = keyBuffer.toString('hex')
+        let keyBufferHex = Hex.fromBytes(keyBuffer)
 
         let version = parseInt(keyBufferHex.substr(0, 4 * 2), 16)
         assert(version === versions.private || version === versions.public, 'Version mismatch: does not match private or public')
