@@ -92,12 +92,12 @@ export class Ed25519HDKey {
         if (typeof value === 'string') {
             assert.equal(value.length, 32 * 2, 'Private key must be 32 bytes.')
             var valueNum = new BN(value, 16)
-            if (valueNum.gt(Ed25519.curve.n) || valueNum.eq(0)) throw 'Invalid private key'
+            if (valueNum.gte(Ed25519.curve.n) || valueNum.isZero()) throw 'Invalid private key'
             this._privateKey = valueNum
         } else {
             //value = value.umod(Ed25519.curve.n)
             // Check if value % order === 0
-            assert(!value.gt(Ed25519.curve.n) && !value.eq(0), 'Invalid private key')
+            assert(!value.gte(Ed25519.curve.n) && !value.isZero(), 'Invalid private key')
             this._privateKey = value
         }
 

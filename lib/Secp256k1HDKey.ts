@@ -65,10 +65,10 @@ export class Secp256k1HDKey {
         if (typeof value === 'string') {
             if (value.length !== 64) throw 'Private key must be 32 bytes.'
             var valueNum = new BN(value, 16)
-            if (valueNum.gt(Secp256k1.n) || valueNum.eq(0)) throw 'Invalid private key'
+            if (valueNum.gte(Secp256k1.n) || valueNum.isZero()) throw 'Invalid private key'
             this._privateKey = valueNum
         } else {
-            if (value.gt(Secp256k1.n) || value.eq(0)) throw 'Invalid private key'
+            if (value.gte(Secp256k1.n) || value.isZero()) throw 'Invalid private key'
             this._privateKey = value
         }
 
@@ -171,7 +171,7 @@ export class Secp256k1HDKey {
             try {
                 let _privateKey = this._privateKey.add(IL).umod(Secp256k1.n)
                 // throw if IL >= n || (privateKey + IL) === 0
-                if(IL.gt(Secp256k1.n) || _privateKey.eqn(0)) throw "Invalid child private key!"
+                if(IL.gte(Secp256k1.n) || _privateKey.eqn(0)) throw "Invalid child private key!"
                 hd.privateKey = _privateKey
             } catch (err) {
                 // In case parse256(IL) >= n or ki == 0, one should proceed with the next value for i
@@ -184,7 +184,7 @@ export class Secp256k1HDKey {
             try {
                 let _publicKey = this._publicKey.add(Secp256k1.g.mul(IL))
                 // throw if IL >= n || (g**IL + publicKey) is infinity
-                if(IL.gt(Secp256k1.n) || _publicKey.isInfinity()) throw "Invalid child public key!"
+                if(IL.gte(Secp256k1.n) || _publicKey.isInfinity()) throw "Invalid child public key!"
                 hd.publicKey = _publicKey
             } catch (err) {
                 // In case parse256(IL) >= n or Ki is the point at infinity, one should proceed with the next value for i
@@ -257,7 +257,7 @@ export class Secp256k1HDKey {
         try {
             let _publicKey = this._publicKey.add(Secp256k1.g.mul(IL))
             // throw if IL >= n || (g**IL + publicKey) is infinity
-            if(IL.gt(Secp256k1.n) || _publicKey.isInfinity()) throw "Invalid child public key!"
+            if(IL.gte(Secp256k1.n) || _publicKey.isInfinity()) throw "Invalid child public key!"
             hd.publicKey = _publicKey
         } catch (err) {
             // In case parse256(IL) >= n or Ki is the point at infinity, one should proceed with the next value for i
@@ -286,7 +286,7 @@ export class Secp256k1HDKey {
         let IL = new BN(I.substr(0, 64), 16)
         let IR = new BN(I.substr(64), 16)
 
-        if ((IL.gt(Secp256k1.n)) || (IL.eqn(0))) {
+        if ((IL.gte(Secp256k1.n)) || (IL.eqn(0))) {
             throw "Invalid Master Key!"
         }
 
