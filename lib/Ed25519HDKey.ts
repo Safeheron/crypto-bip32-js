@@ -10,8 +10,6 @@ const MASTER_SECRET = cryptoJS.enc.Utf8.parse('Bitcoin seed')
 const HARDENED_OFFSET = 0x80000000
 const LEN = 78
 
-const ZERO = new BN('0', 16)
-
 // Bitcoin hardcoded by default, can use package `coininfo` for others
 const BITCOIN_VERSIONS = {private: 0x03126f7c, public: 0x031273b7}
 
@@ -85,20 +83,23 @@ export class Ed25519HDKey {
     }
 
     public get privateKey(): BN {
-        return this._privateKey
+        return this._privateKey ? this._privateKey.clone() : null
     }
 
     public set privateKey(value: string | BN) {
         if (typeof value === 'string') {
             assert.equal(value.length, 32 * 2, 'Private key must be 32 bytes.')
+            assert(/^[0-9a-fA-F]{64}$/.test(value), 'Invalid private key')
             var valueNum = new BN(value, 16)
             if (valueNum.gte(Ed25519.curve.n) || valueNum.isZero()) throw 'Invalid private key'
             this._privateKey = valueNum
-        } else {
+        } else if (BN.isBN(value)) {
             //value = value.umod(Ed25519.curve.n)
             // Check if value % order === 0
-            assert(!value.gte(Ed25519.curve.n) && !value.isZero(), 'Invalid private key')
-            this._privateKey = value
+            assert(!value.isNeg() && !value.gte(Ed25519.curve.n) && !value.isZero(), 'Invalid private key')
+            this._privateKey = value.clone()
+        } else {
+            throw 'Private key must be a hex string or BN.'
         }
 
         this._publicKey = Ed25519.g.mul(this._privateKey)
@@ -236,7 +237,7 @@ export class Ed25519HDKey {
 
 
     public publicDerive(path: string): [Ed25519HDKey, BN] {
-        let delta = ZERO
+        let delta = new BN(0)
 
         if (path.indexOf("'") != -1) {
             throw "Could not derive hardened child key!"

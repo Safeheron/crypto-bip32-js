@@ -10,8 +10,6 @@ const MASTER_SECRET = cryptoJS.enc.Utf8.parse('Bitcoin seed')
 const HARDENED_OFFSET = 0x80000000
 const LEN = 78
 
-const ZERO = new BN('0', 16)
-
 // Bitcoin hardcoded by default, can use package `coininfo` for others
 const BITCOIN_VERSIONS = {private: 0x0488ADE4, public: 0x0488B21E}
 
@@ -58,18 +56,21 @@ export class Secp256k1HDKey {
     }
 
     public get privateKey(): BN {
-        return this._privateKey
+        return this._privateKey ? this._privateKey.clone() : null
     }
 
     public set privateKey(value: string | BN) {
         if (typeof value === 'string') {
             if (value.length !== 64) throw 'Private key must be 32 bytes.'
+            if (!/^[0-9a-fA-F]{64}$/.test(value)) throw 'Invalid private key'
             var valueNum = new BN(value, 16)
             if (valueNum.gte(Secp256k1.n) || valueNum.isZero()) throw 'Invalid private key'
             this._privateKey = valueNum
+        } else if (BN.isBN(value)) {
+            if (value.isNeg() || value.gte(Secp256k1.n) || value.isZero()) throw 'Invalid private key'
+            this._privateKey = value.clone()
         } else {
-            if (value.gte(Secp256k1.n) || value.isZero()) throw 'Invalid private key'
-            this._privateKey = value
+            throw 'Private key must be a hex string or BN.'
         }
 
         this._publicKey = Secp256k1.g.mul(this._privateKey)
@@ -148,7 +149,7 @@ export class Secp256k1HDKey {
 
         let data = ""
         if (isHardened) { // Hardened child
-            assert(this.privateKey, 'Could not derive hardened child key')
+            assert(this._privateKey, 'Could not derive hardened child key')
             // data = 0x00 || ser256(kpar) || ser32(index)
             data = '00' + Hex.pad64(this._privateKey.toString(16)) + Hex.pad8(index.toString(16))
         } else { // Normal child
@@ -166,7 +167,7 @@ export class Secp256k1HDKey {
         let hd = new Secp256k1HDKey(this.versions)
 
         // Private parent key -> private child key
-        if (this.privateKey) {
+        if (this._privateKey) {
             // ki = parse256(IL) + kpar (mod n)
             try {
                 let _privateKey = this._privateKey.add(IL).umod(Secp256k1.n)
@@ -202,7 +203,7 @@ export class Secp256k1HDKey {
 
 
     public publicDerive(path: string): [Secp256k1HDKey, BN] {
-        let delta = ZERO
+        let delta = new BN(0)
         if (path === 'm' || path === 'M' || path === "m'" || path === "M'") {
             return [this, new BN(0)]
         }
